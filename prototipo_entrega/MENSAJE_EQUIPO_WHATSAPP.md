@@ -1,18 +1,40 @@
-Hola equipo. Ya integramos los aportes de Jessica y Guillermo en un prototipo completo: notebook ejecutado, informe Markdown, bases reducidas, auditoría, comparación de modelos, prueba final, pronóstico con intervalos y análisis de sensibilidad.
+Hola equipo. Ya dejamos integrada en `main` una primera versión completa y reproducible del trabajo:
 
-Publicamos la rama `integracion-prototipo` en el repositorio de Guillermo:
+- notebook ejecutado de principio a fin;
+- base horaria filtrada y base semanal utilizada;
+- auditoría de calidad y cobertura;
+- análisis exploratorio y gráficos;
+- comparación de siete modelos;
+- prueba final separada de la selección;
+- pronóstico de ocho semanas con intervalos;
+- análisis de sensibilidad;
+- informe en Markdown y una versión Word preliminar.
 
-- `9c32413`: prototipo reproducible;
-- `02dc27f`: sensibilidad a cobertura, interpolación, media/mediana y estado RE;
-- `ddecfee`: códigos oficiales y alcance del pronóstico;
-- `2ec4ad9`: versión Word preliminar.
+Repositorio: <https://github.com/glopezr10/proyecto_series_tiempo>
 
-Rama: <https://github.com/glopezr10/proyecto_series_tiempo/tree/integracion-prototipo>
+Resultado actual: el modelo AutoReg con rezagos 1-4 y 52 obtuvo RMSE de 27,53 mg/Nm³ en las ocho semanas de prueba. Los residuos pasan Ljung-Box y el pronóstico central de las ocho semanas siguientes se mantiene aproximadamente entre 304 y 314 mg/Nm³. También verificamos los códigos operacionales con la Resolución Exenta SMA N.º 404/2017 y analizamos por separado el escenario que usa solo datos medidos durante operación en régimen (`DM+RE`).
 
-Pull request: <https://github.com/glopezr10/proyecto_series_tiempo/pull/new/integracion-prototipo>
+Propongo que trabajemos así para no sobrescribirnos:
 
-El modelo AutoReg con rezagos 1-4 y 52 obtuvo RMSE 27,53 en la prueba y sus residuos pasan Ljung-Box. La sensibilidad indica que el resultado no depende solamente de las diez semanas interpoladas.
+1. Antes de comenzar, actualizar `main`:
+   `git switch main`
+   `git pull origin main`
+2. Cada persona crea o actualiza su propia rama desde `main`:
+   `git switch -c Nombre`
+3. Hacer cambios acotados, guardarlos con un mensaje claro y subir la rama:
+   `git add .`
+   `git commit -m 'Descripción breve del aporte'`
+   `git push -u origin Nombre`
+4. Abrir un pull request hacia `main` y avisar al grupo para revisarlo antes de fusionar.
+5. Evitemos subir los CSV crudos de aproximadamente 3 GB; trabajemos con las bases reducidas que ya están versionadas.
 
-Gracias, Guillermo, por habilitar el acceso. No subimos los CSV crudos de 3 GB; la rama contiene solamente las bases filtradas y los artefactos reproducibles.
+Para la siguiente revisión necesitamos principalmente:
 
-También confirmé los códigos operacionales y de calidad con la Resolución Exenta SMA N.º 404/2017 y dejé documentada la sensibilidad del resultado al usar solamente operación en régimen (`DM+RE`). Ya existe una versión Word preliminar con portada, estilos, tablas y figuras. Para mañana quedan principalmente la revisión conjunta de interpretaciones y nombres, y abrir el Word para el control visual final.
+- confirmar que el objetivo y la interpretación ambiental nos representen a todos;
+- revisar las decisiones de limpieza, agregación semanal e interpolación;
+- revisar la comparación y selección de modelos;
+- corregir redacción, nombres y referencias;
+- abrir el Word y hacer el control visual final;
+- decidir qué partes presentará o explicará cada integrante.
+
+La idea es que `main` sea siempre la versión estable y que cada aporte entre mediante una rama y un pull request. Así podemos comparar cambios, discutirlos y volver atrás si algo no funciona.
