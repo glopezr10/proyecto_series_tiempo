@@ -148,6 +148,28 @@ Posteriormente el modelo se reentrenÃ³ con las 299 semanas. Ljung-Box produjo 
 
 El nivel central pronosticado permanece relativamente estable. La amplitud creciente de los intervalos refleja que la incertidumbre se acumula con el horizonte.
 
+<!-- SENSIBILIDAD_INICIO -->
+# 8.1 AnÃ¡lisis de sensibilidad
+
+Se evaluÃ³ el mismo modelo AutoReg bajo cinco construcciones de la serie para determinar si la conclusiÃ³n dependÃ­a del umbral de cobertura, las diez interpolaciones, el estadÃ­stico semanal o el estado operacional.
+
+| Escenario | Semanas imputadas | RMSE validaciÃ³n | RMSE prueba | Ljung-Box p(10) | PronÃ³stico medio 8 semanas |
+|---|---:|---:|---:|---:|---:|
+| Media, cobertura 75% | 10 | 40,02 | 27,53 | 0,713 | 310,62 |
+| Media, cobertura 50% | 1 | 39,32 | 29,24 | 0,715 | 313,98 |
+| Media, sin umbral | 0 | 39,28 | 29,27 | 0,713 | 313,94 |
+| Mediana, cobertura 75% | 10 | 48,52 | 36,54 | 0,992 | 295,80 |
+| Media DM+RE, cobertura 75% | 25 | 37,84 | 31,62 | 0,054 | 296,64 |
+
+![Sensibilidad del RMSE de prueba](resultados/figuras/09_sensibilidad_construccion_serie.png){width=90%}
+
+La familia AutoReg mantuvo residuos compatibles con ruido blanco en todos los escenarios. Reducir el umbral al 50% o utilizar todas las medias semanales produjo resultados muy cercanos, por lo que las diez interpolaciones de la especificaciÃ³n principal no determinan por sÃ­ solas la conclusiÃ³n. La mediana y la restricciÃ³n al estado `RE` redujeron el nivel pronosticado y empeoraron el RMSE de prueba.
+
+![Sensibilidad del pronÃ³stico](resultados/figuras/10_sensibilidad_pronostico.png){width=90%}
+
+Se conserva como especificaciÃ³n principal la media de datos medidos con cobertura mÃ­nima del 75% porque mantiene el significado de concentraciÃ³n semanal general, presenta el menor RMSE de prueba y evita condicionar la definiciÃ³n a cÃ³digos operacionales cuyo significado completo aÃºn debe verificarse. La diferencia de nivel observada bajo `DM+RE` se reporta como limitaciÃ³n sustantiva.
+<!-- SENSIBILIDAD_FIN -->
+
 # 9. Conclusiones
 
 La base disponible permitiÃ³ construir una serie semanal de alta cobertura. Los modelos simples entregaron pronÃ³sticos competitivos, pero varios conservaron autocorrelaciÃ³n en los residuos. El modelo AutoReg con rezagos cortos y anual ofreciÃ³ el mejor compromiso entre error fuera de muestra, parsimonia y adecuaciÃ³n residual.
