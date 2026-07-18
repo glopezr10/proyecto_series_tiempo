@@ -10,7 +10,7 @@ Se evaluó el modelo AutoReg con rezagos 1, 2, 3, 4 y 52 bajo cinco construccion
 
 El modelo conservó residuos compatibles con ruido blanco en todos los escenarios. La especificación principal obtuvo el menor RMSE de prueba, 27,53 mg/Nm³. Los escenarios de 50% y sin umbral obtuvieron 29,24 y 29,27 mg/Nm³, respectivamente, lo que indica que las diez interpolaciones no determinan por sí solas el resultado.
 
-La mediana y la restricción `DM+RE` redujeron el pronóstico medio hacia 296 mg/Nm³ y presentaron errores de prueba mayores. La diferencia se reporta como limitación, especialmente porque el significado oficial de todos los códigos `ESTADO_UGE` todavía debe confirmarse.
+La mediana y la restricción `DM+RE` redujeron el pronóstico medio hacia 296 mg/Nm³ y presentaron errores de prueba mayores. Según la Resolución Exenta SMA N.º 404/2017, `RE` corresponde a operación en régimen. Por tanto, `DM+RE` no es solo otro filtro de calidad: cambia el estimando a concentración medida durante operación en régimen. La diferencia se reporta como una limitación sustantiva del pronóstico general.
 
 ## Reproducción
 

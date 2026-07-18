@@ -30,4 +30,4 @@ Desde `prototipo_entrega/`:
 pandoc INFORME_EJECUTIVO.md -o INFORME_EJECUTIVO.docx --resource-path=.
 ```
 
-Antes de entregar se debe confirmar el significado oficial de los códigos operacionales, completar las referencias y revisar nombres, ortografía y formato del documento Word.
+Los códigos operacionales y de calidad ya fueron contrastados con la Resolución Exenta SMA N.º 404/2017 y quedaron documentados en `CODIGOS_OFICIALES.md`. Antes de entregar resta revisar nombres, ortografía y formato del documento Word.

@@ -61,7 +61,7 @@ Archivos que deben excluirse con `.gitignore`:
 
 ### Domingo 19
 
-- Revisar el diccionario de códigos y las decisiones de calidad.
+- Revisar con el equipo las decisiones de calidad; el diccionario de códigos ya fue contrastado con la Resolución Exenta SMA N.º 404/2017.
 - Revisar interpretaciones y sensibilidad de las diez imputaciones.
 - Completar referencias, limitaciones y redacción final.
 - Integrar aportes útiles del equipo mediante Git.

@@ -30,7 +30,7 @@ La familia AutoReg mantuvo residuos compatibles con ruido blanco en todos los es
 
 ![Sensibilidad del pronóstico](resultados/figuras/10_sensibilidad_pronostico.png){width=90%}
 
-Se conserva como especificación principal la media de datos medidos con cobertura mínima del 75% porque mantiene el significado de concentración semanal general, presenta el menor RMSE de prueba y evita condicionar la definición a códigos operacionales cuyo significado completo aún debe verificarse. La diferencia de nivel observada bajo `DM+RE` se reporta como limitación sustantiva.
+Se conserva como especificación principal la media de datos medidos con cobertura mínima del 75% porque corresponde al objetivo de concentración semanal general y presenta el menor RMSE de prueba. La diferencia de nivel observada bajo `DM+RE` se reporta como limitación sustantiva y muestra que el pronóstico no debe reinterpretarse como concentración exclusiva durante operación en régimen.
 <!-- SENSIBILIDAD_FIN -->
 
 """
@@ -103,7 +103,7 @@ display(Image(filename=str(FIGURES / "10_sensibilidad_pronostico.png")))"""
         markdown_cell(
             """AutoReg mantuvo residuos compatibles con ruido blanco en los cinco escenarios. Los resultados con umbral 50% y sin umbral fueron cercanos a la especificación principal, por lo que las diez interpolaciones no explican por sí solas el resultado. La mediana y la restricción `DM+RE` redujeron el nivel esperado hacia 296 mg/Nm³ y aumentaron el RMSE de prueba.
 
-Se conserva la media con cobertura 75% porque presenta el menor RMSE de prueba y no condiciona el objetivo a códigos operacionales aún pendientes de confirmación oficial."""
+Según la Resolución Exenta SMA N.º 404/2017, `RE` corresponde a operación en régimen. Se conserva la media de todos los datos medidos con cobertura 75% porque corresponde al objetivo de concentración semanal general y presenta el menor RMSE de prueba. `DM+RE` responde a una pregunta distinta: concentración medida durante operación en régimen."""
         ),
     ]
     nb["cells"][index:index] = nuevas
