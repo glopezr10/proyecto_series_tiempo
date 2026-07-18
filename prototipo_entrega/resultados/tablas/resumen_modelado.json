@@ -1,0 +1,23 @@
+{
+  "n_semanas": 299,
+  "n_imputadas": 10,
+  "inicio": "2020-01-12",
+  "fin": "2025-09-28",
+  "media": 312.24010143645864,
+  "desviacion_estandar": 52.68312155681524,
+  "adf_estadistico": -2.8516116818883064,
+  "adf_p_value": 0.051271194240652296,
+  "regla_seleccion": "Ljung-Box p>0.05 y luego menor RMSE de validación",
+  "modelo_seleccionado": "AutoReg rezagos 1-4 y 52",
+  "rmse_validacion": 40.01626941894431,
+  "mae_validacion": 31.98201396567699,
+  "metricas_prueba": {
+    "RMSE": 27.533646271880443,
+    "MAE": 24.698774070798855,
+    "MAPE": 8.519916410382661,
+    "sMAPE": 8.545507001379931
+  },
+  "ljung_box_p_10": 0.7130270461707734,
+  "ljung_box_p_20": 0.80084521439544,
+  "metodo_intervalo": "Intervalo predictivo normal del modelo AutoReg, 95%"
+}

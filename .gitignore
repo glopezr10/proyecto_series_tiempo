@@ -1,0 +1,19 @@
+# Datos crudos SNIFA (aprox. 3 GB)
+PH*.csv
+Proyecto_final_ST/PH*.csv
+
+# Jupyter y Python
+.ipynb_checkpoints/
+__pycache__/
+*.py[cod]
+
+# Entornos y cachÃ©s
+.venv/
+venv/
+.pytest_cache/
+.mypy_cache/
+
+# Temporales y exportaciones locales
+~$*.docx
+*.tmp
+tmp/
