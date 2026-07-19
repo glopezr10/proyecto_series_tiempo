@@ -103,15 +103,52 @@ def ajustar_modelos(train: pd.Series, h: int) -> list[dict[str, object]]:
                 initialization_method="estimated",
             ).fit(optimized=True, use_brute=False),
         ),
+        # La PACF en nivel concentra las senales principales en los primeros
+        # tres rezagos. Se comparan AR(1) y AR(3), escritos como ARIMA(p,0,0),
+        # siguiendo la notacion y la implementacion del material del curso.
         (
-            "SARIMA(1,0,1)(1,0,0)[52]",
+            "ARIMA(1,0,0)",
             lambda: SARIMAX(
-                train,
-                order=(1, 0, 1),
-                seasonal_order=(1, 0, 0, PERIODO_ESTACIONAL),
-                enforce_stationarity=False,
-                enforce_invertibility=False,
-            ).fit(disp=False, maxiter=200),
+                train, order=(1, 0, 0), trend="c",
+                enforce_stationarity=False, enforce_invertibility=False,
+            ).fit(disp=False, maxiter=200, cov_type="none"),
+        ),
+        (
+            "ARIMA(3,0,0)",
+            lambda: SARIMAX(
+                train, order=(3, 0, 0), trend="c",
+                enforce_stationarity=False, enforce_invertibility=False,
+            ).fit(disp=False, maxiter=200, cov_type="none"),
+        ),
+        # El ADF en nivel es limitrofe y la primera diferencia es estacionaria.
+        # La ACF/PACF diferenciada motiva candidatos con d=1.
+        (
+            "ARIMA(1,1,0)",
+            lambda: SARIMAX(
+                train, order=(1, 1, 0),
+                enforce_stationarity=False, enforce_invertibility=False,
+            ).fit(disp=False, maxiter=200, cov_type="none"),
+        ),
+        (
+            "ARIMA(2,1,0)",
+            lambda: SARIMAX(
+                train, order=(2, 1, 0),
+                enforce_stationarity=False, enforce_invertibility=False,
+            ).fit(disp=False, maxiter=200, cov_type="none"),
+        ),
+        (
+            "ARIMA(0,1,1)",
+            lambda: SARIMAX(
+                train, order=(0, 1, 1),
+                enforce_stationarity=False, enforce_invertibility=False,
+            ).fit(disp=False, maxiter=200, cov_type="none"),
+        ),
+        (
+            "ARIMA(0,1,2)",
+            lambda: SARIMAX(
+                train, order=(0, 1, 2),
+                enforce_stationarity=False, enforce_invertibility=False,
+            ).fit(disp=False, maxiter=200, cov_type="none"),
         ),
     ]
 
@@ -161,7 +198,7 @@ def intervalo_pronostico(
         return (
             np.asarray(conf.iloc[:, 0]),
             np.asarray(conf.iloc[:, 1]),
-            "Intervalo predictivo del modelo SARIMA, 95%",
+            "Intervalo predictivo del modelo ARIMA, 95%",
         )
 
     # Aproximación transparente para modelos sin intervalos nativos en esta versión.
@@ -218,13 +255,25 @@ def main() -> None:
     comparacion = pd.DataFrame(filas).sort_values(["RMSE", "MAE"]).reset_index(drop=True)
     comparacion["ranking_RMSE"] = np.arange(1, len(comparacion) + 1)
     comparacion.to_csv(TABLES / "07_comparacion_validacion.csv", index=False)
-    mejor = str(comparacion.iloc[0]["modelo"])
+    apropiados = comparacion.loc[comparacion["Ljung_Box_p_10"] > 0.05]
+    if apropiados.empty:
+        raise ValueError("Ningun modelo candidato supera Ljung-Box al 5%")
+    mejor_fila = apropiados.sort_values(["RMSE", "MAE"]).iloc[0]
+    mejor = str(mejor_fila["modelo"])
 
     train_valid = serie.iloc[:-H_PRUEBA]
     resultado_prueba = reajustar(mejor, train_valid, H_PRUEBA)
     pred_prueba = np.asarray(resultado_prueba["pronostico"])
-    metricas_prueba = metricas(prueba, pred_prueba)
-    pd.DataFrame([{"modelo": mejor, **metricas_prueba}]).to_csv(
+    # El bloque de prueba conserva ocho semanas cronologicas, pero una fue
+    # imputada. Los errores se calculan solo contra semanas observadas.
+    prueba_observada = ~semanal["valor_imputado"].iloc[-H_PRUEBA:].to_numpy(dtype=bool)
+    metricas_prueba = metricas(prueba.iloc[prueba_observada], pred_prueba[prueba_observada])
+    pd.DataFrame([{
+        "modelo": mejor,
+        "semanas_bloque_prueba": H_PRUEBA,
+        "semanas_observadas_evaluadas": int(prueba_observada.sum()),
+        **metricas_prueba,
+    }]).to_csv(
         TABLES / "08_metricas_prueba_final.csv", index=False
     )
 
@@ -337,8 +386,10 @@ def main() -> None:
         "adf_estadistico": float(adf[0]),
         "adf_p_value": float(adf[1]),
         "modelo_seleccionado": mejor,
-        "rmse_validacion": float(comparacion.iloc[0]["RMSE"]),
-        "mae_validacion": float(comparacion.iloc[0]["MAE"]),
+        "regla_seleccion": "Ljung-Box p>0.05 y luego menor RMSE de validacion",
+        "rmse_validacion": float(mejor_fila["RMSE"]),
+        "mae_validacion": float(mejor_fila["MAE"]),
+        "semanas_prueba_observadas": int(prueba_observada.sum()),
         "metricas_prueba": metricas_prueba,
         "ljung_box_p_10": float(ljung.loc[10, "lb_pvalue"]),
         "ljung_box_p_20": float(ljung.loc[20, "lb_pvalue"]),
