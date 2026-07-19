@@ -103,6 +103,8 @@ Se compararon doce alternativas:
 
 La regla se fijó antes de observar la prueba final: un modelo debía superar Ljung-Box al 5% y, entre los candidatos apropiados, se escogería el menor RMSE de validación. MAE, MAPE y sMAPE se utilizaron como medidas complementarias. El AIC se informó únicamente como referencia dentro de modelos probabilísticos y no para ordenar familias diferentes.
 
+El marco metodológico se restringió al material de la asignatura. Los modelos ingenuos, el suavizamiento exponencial y la validación temporal se trabajaron en el Tutorial 2; ACF, PACF y modelos AR se revisaron en los Tutoriales 3 y 6; Ljung-Box se utilizó en el Tutorial 4; y la formulación, comparación y diagnóstico de modelos ARIMA se aplicó en la tarea *Modelos ARMA* y en las Ayudantías 2 y 3. No se incorporaron familias de modelos ajenas a ese material.
+
 # 6. Comparación de modelos
 
 | Modelo | RMSE | MAE | MAPE (%) | sMAPE (%) | Ljung-Box p(10) |
@@ -158,6 +160,8 @@ Posteriormente el modelo se reentrenó con las 299 semanas. Ljung-Box produjo va
 
 El nivel central pronosticado permanece relativamente estable. La amplitud creciente de los intervalos refleja que la incertidumbre se acumula con el horizonte.
 
+La pauta utiliza la expresión “intervalo de confianza”. En este contexto se reporta un **intervalo predictivo del 95%**, porque incorpora la incertidumbre asociada a una observación semanal futura; no es solamente un intervalo para la media estimada.
+
 <!-- SENSIBILIDAD_INICIO -->
 # 8.1 Análisis de sensibilidad
 
@@ -190,9 +194,10 @@ Los resultados no deben interpretarse como masa total emitida ni como evaluació
 
 # Referencias y fuentes
 
-- Superintendencia del Medio Ambiente. Sistema Nacional de Información de Fiscalización Ambiental, sección Datos Abiertos: <https://snifa.sma.gob.cl/DatosAbiertos>.
+- Material docente del curso *Series de Tiempo*: Tutoriales 2, 3, 4 y 6; tarea *Modelos ARMA*; Ayudantías 2 y 3.
+- Superintendencia del Medio Ambiente. Sistema Nacional de Información de Fiscalización Ambiental, sección [Datos Abiertos de SNIFA](https://snifa.sma.gob.cl/DatosAbiertos).
 - Superintendencia del Medio Ambiente. Colección pública de datos de centrales termoeléctricas bajo D.S. N.º 13/2011.
-- Superintendencia del Medio Ambiente (2017). Resolución Exenta N.º 404/2017, que aprueba la actualización de la Guía sobre el Sistema de Información para Centrales Termoeléctricas: <https://transparencia.sma.gob.cl/doc/resoluciones/RESOL_EXENTA_SMA_2017/RESOL%20EXENTA%20N%20404%20SMA.PDF>.
-- Superintendencia del Medio Ambiente. *Descripción de los datos* de la colección pública: <https://drive.google.com/file/d/1A4ofyFi_Jq8aScbx0os99whqdTbL3WR3/view>.
+- Superintendencia del Medio Ambiente (2017). [Resolución Exenta N.º 404/2017](https://transparencia.sma.gob.cl/doc/resoluciones/RESOL_EXENTA_SMA_2017/RESOL%20EXENTA%20N%20404%20SMA.PDF), que aprueba la actualización de la Guía sobre el Sistema de Información para Centrales Termoeléctricas.
+- Superintendencia del Medio Ambiente. [Descripción de los datos de la colección pública](https://drive.google.com/file/d/1A4ofyFi_Jq8aScbx0os99whqdTbL3WR3/view).
 - Archivos trimestrales `PH2020-1` a `PH2025-3`, descargados y procesados en julio de 2026.
 

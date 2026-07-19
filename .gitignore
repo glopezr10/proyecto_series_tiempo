@@ -18,3 +18,4 @@ venv/
 prototipo_entrega/INFORME_EJECUTIVO.docx
 *.tmp
 tmp/
+tmp_word/
