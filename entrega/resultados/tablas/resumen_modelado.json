@@ -1,24 +1,72 @@
 {
-  "n_semanas": 299,
-  "n_imputadas": 10,
-  "inicio": "2020-01-12",
-  "fin": "2025-09-28",
-  "media": 312.24010143645864,
-  "desviacion_estandar": 52.68312155681524,
-  "adf_estadistico": -2.851611681888307,
-  "adf_p_value": 0.051271194240652275,
+  "registros_horarios": 50400,
+  "semanas_totales": 299,
+  "semanas_observadas": 289,
+  "particiones": [
+    {
+      "conjunto": "Entrenamiento",
+      "n_semanas": 259,
+      "n_observadas": 250,
+      "n_imputadas": 9,
+      "inicio": "2020-01-12",
+      "fin": "2024-12-22"
+    },
+    {
+      "conjunto": "Validación",
+      "n_semanas": 32,
+      "n_observadas": 32,
+      "n_imputadas": 0,
+      "inicio": "2024-12-29",
+      "fin": "2025-08-03"
+    },
+    {
+      "conjunto": "Prueba final",
+      "n_semanas": 8,
+      "n_observadas": 7,
+      "n_imputadas": 1,
+      "inicio": "2025-08-10",
+      "fin": "2025-09-28"
+    }
+  ],
   "modelo_seleccionado": "ARIMA(3,0,0)",
-  "regla_seleccion": "Ljung-Box p>0.05 y luego menor RMSE de validacion",
-  "rmse_validacion": 35.987703471276625,
-  "mae_validacion": 29.243176577183313,
-  "semanas_prueba_observadas": 7,
-  "metricas_prueba": {
-    "RMSE": 30.233986959056406,
-    "MAE": 28.890216530955115,
-    "MAPE": 10.31522155474395,
-    "sMAPE": 10.02556210858312
+  "validacion": {
+    "modelo": "ARIMA(3,0,0)",
+    "RMSE": 35.98770347128732,
+    "MAE": 29.24317657717434,
+    "MAPE": 10.797440256694134,
+    "sMAPE": 10.233800833240654,
+    "semanas_validacion_observadas": 32,
+    "AIC": 2444.2932682142446,
+    "loglikelihood_burn": 3,
+    "model_df": 3,
+    "Ljung_Box_p_10": 0.8224591676880284,
+    "ranking_RMSE": 1
   },
-  "ljung_box_p_10": 0.5723751735754109,
-  "ljung_box_p_20": 0.308137334801866,
-  "metodo_intervalo": "Intervalo predictivo del modelo ARIMA, 95%"
+  "prueba": {
+    "modelo": "ARIMA(3,0,0)",
+    "semanas_bloque_prueba": 8,
+    "semanas_observadas_evaluadas": 7,
+    "RMSE": 30.233987080982438,
+    "MAE": 28.890216535313836,
+    "MAPE": 10.315221585708196,
+    "sMAPE": 10.02556211175941
+  },
+  "ljung_box": [
+    {
+      "lag": 10,
+      "lb_stat": 7.003739620314947,
+      "lb_pvalue": 0.42849059316218246,
+      "loglikelihood_burn_excluido": 3,
+      "model_df": 3
+    },
+    {
+      "lag": 20,
+      "lb_stat": 17.781745932200756,
+      "lb_pvalue": 0.40273341433034854,
+      "loglikelihood_burn_excluido": 3,
+      "model_df": 3
+    }
+  ],
+  "sensibilidad_escenarios": 5,
+  "pronosticos_finales": 8
 }

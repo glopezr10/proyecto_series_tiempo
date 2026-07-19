@@ -1,0 +1,4 @@
+conjunto,n_semanas,n_observadas,n_imputadas,inicio,fin
+Entrenamiento,259,250,9,2020-01-12,2024-12-22
+Validación,32,32,0,2024-12-29,2025-08-03
+Prueba final,8,7,1,2025-08-10,2025-09-28

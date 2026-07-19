@@ -1,17 +1,7 @@
 {
-  "archivos": 23,
-  "periodo_archivos": [
-    "2020-1",
-    "2025-3"
-  ],
-  "registros_angamos": 50400,
-  "fechas_invalidas": 0,
-  "duplicados_fecha_hora": 0,
-  "valores_nox_numericos": 50400,
-  "mediciones_validas": 48574,
-  "semanas_totales": 301,
-  "semanas_modelamiento": 289,
-  "porcentaje_semanas_utilizables": 96.01,
-  "fecha_min": "2020-01-01 00:00:00",
-  "fecha_max": "2025-09-30 23:00:00"
+  "archivos originales": 23,
+  "registros Angamos 1": 50400,
+  "fechas inválidas": 0,
+  "duplicados fecha-hora": 0,
+  "mediciones DM válidas": 48574
 }
