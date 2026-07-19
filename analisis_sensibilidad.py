@@ -1,4 +1,4 @@
-"""Sensibilidad del AutoReg a cobertura, imputación, mediana y estado RE."""
+"""Sensibilidad del ARIMA(3,0,0) a la construccion de la serie semanal."""
 
 from pathlib import Path
 
@@ -9,7 +9,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from statsmodels.stats.diagnostic import acorr_ljungbox
-from statsmodels.tsa.ar_model import AutoReg
+from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 
 ROOT = Path(__file__).resolve().parent
@@ -17,7 +17,6 @@ PROTO = ROOT / "prototipo_entrega"
 TABLES = PROTO / "resultados" / "tablas"
 FIGURES = PROTO / "resultados" / "figuras"
 DATA = PROTO / "data"
-LAGS = [1, 2, 3, 4, 52]
 H_VALIDACION = 32
 H_PRUEBA = 8
 
@@ -35,7 +34,13 @@ def metricas(real, pred):
 
 
 def ajustar(serie):
-    return AutoReg(serie, lags=LAGS, trend="ct", old_names=False).fit()
+    return SARIMAX(
+        serie,
+        order=(3, 0, 0),
+        trend="c",
+        enforce_stationarity=False,
+        enforce_invertibility=False,
+    ).fit(disp=False, maxiter=200, cov_type="none")
 
 
 def preparar_series():
@@ -53,92 +58,79 @@ def preparar_series():
         .agg(["count", "mean"])
         .reindex(auditoria.index)
     )
-
-    escenarios = {
+    return {
         "Media, cobertura 75%": auditoria["nox_media_mg_nm3"].where(auditoria["cobertura"] >= 0.75),
         "Media, cobertura 50%": auditoria["nox_media_mg_nm3"].where(auditoria["cobertura"] >= 0.50),
         "Media, sin umbral": auditoria["nox_media_mg_nm3"],
         "Mediana, cobertura 75%": auditoria["nox_mediana_mg_nm3"].where(auditoria["cobertura"] >= 0.75),
         "Media DM+RE, cobertura 75%": re["mean"].where(re["count"] / 168 >= 0.75),
     }
-    return {nombre: valores.astype(float) for nombre, valores in escenarios.items()}
 
 
 def main():
-    escenarios = preparar_series()
+    escenarios = {k: v.astype(float) for k, v in preparar_series().items()}
+    base = escenarios["Media, cobertura 75%"].interpolate(method="time", limit_area="inside")
     filas = []
     pronosticos = {}
 
     for nombre, observada in escenarios.items():
-        imputadas = int(observada.isna().sum())
         serie = observada.interpolate(method="time", limit_area="inside")
         if serie.isna().any():
             raise ValueError(f"El escenario {nombre} conserva valores ausentes")
 
         train = serie.iloc[: -(H_VALIDACION + H_PRUEBA)]
-        valid = serie.iloc[-(H_VALIDACION + H_PRUEBA) : -H_PRUEBA]
-        test = serie.iloc[-H_PRUEBA:]
+        validacion = serie.iloc[-(H_VALIDACION + H_PRUEBA) : -H_PRUEBA]
+        prueba = serie.iloc[-H_PRUEBA:]
+        prueba_observada = observada.iloc[-H_PRUEBA:].notna().to_numpy()
 
         fit_train = ajustar(train)
-        pred_valid = np.asarray(
-            fit_train.predict(start=len(train), end=len(train) + H_VALIDACION - 1)
-        )
-        fit_test = ajustar(serie.iloc[:-H_PRUEBA])
-        pred_test = np.asarray(
-            fit_test.predict(start=len(serie) - H_PRUEBA, end=len(serie) - 1)
-        )
-        fit_full = ajustar(serie)
-        pred_future = np.asarray(
-            fit_full.predict(start=len(serie), end=len(serie) + 7)
-        )
-        lb = acorr_ljungbox(fit_full.resid, lags=[10, 20], return_df=True)
+        pred_validacion = np.asarray(fit_train.get_forecast(H_VALIDACION).predicted_mean)
+        fit_prueba = ajustar(serie.iloc[:-H_PRUEBA])
+        pred_prueba = np.asarray(fit_prueba.get_forecast(H_PRUEBA).predicted_mean)
+        fit_completo = ajustar(serie)
+        pred_futuro = np.asarray(fit_completo.get_forecast(8).predicted_mean)
+        lb = acorr_ljungbox(fit_completo.resid, lags=[10, 20], return_df=True)
 
-        filas.append(
-            {
-                "escenario": nombre,
-                "semanas_imputadas": imputadas,
-                "correlacion_con_base": float(
-                    serie.corr(
-                        escenarios["Media, cobertura 75%"].interpolate(
-                            method="time", limit_area="inside"
-                        )
-                    )
-                ),
-                **{f"validacion_{k}": v for k, v in metricas(valid, pred_valid).items()},
-                **{f"prueba_{k}": v for k, v in metricas(test, pred_test).items()},
-                "ljung_p_10": float(lb.loc[10, "lb_pvalue"]),
-                "ljung_p_20": float(lb.loc[20, "lb_pvalue"]),
-                "pronostico_medio_8s": float(pred_future.mean()),
-                "pronostico_min_8s": float(pred_future.min()),
-                "pronostico_max_8s": float(pred_future.max()),
-            }
-        )
-        pronosticos[nombre] = pred_future
+        filas.append({
+            "escenario": nombre,
+            "semanas_imputadas": int(observada.isna().sum()),
+            "correlacion_con_base": float(serie.corr(base)),
+            **{f"validacion_{k}": v for k, v in metricas(validacion, pred_validacion).items()},
+            **{
+                f"prueba_{k}": v
+                for k, v in metricas(
+                    prueba.iloc[prueba_observada], pred_prueba[prueba_observada]
+                ).items()
+            },
+            "prueba_semanas_observadas": int(prueba_observada.sum()),
+            "ljung_p_10": float(lb.loc[10, "lb_pvalue"]),
+            "ljung_p_20": float(lb.loc[20, "lb_pvalue"]),
+            "pronostico_medio_8s": float(pred_futuro.mean()),
+            "pronostico_min_8s": float(pred_futuro.min()),
+            "pronostico_max_8s": float(pred_futuro.max()),
+        })
+        pronosticos[nombre] = pred_futuro
 
     resultados = pd.DataFrame(filas)
     resultados.to_csv(TABLES / "12_analisis_sensibilidad.csv", index=False)
 
     orden = resultados.sort_values("prueba_RMSE")
-    plt.figure(figsize=(11, 5))
     colores = ["#173f5f" if x == "Media, cobertura 75%" else "#6c8ead" for x in orden["escenario"]]
+    plt.figure(figsize=(11, 5))
     plt.barh(orden["escenario"], orden["prueba_RMSE"], color=colores)
-    plt.xlabel("RMSE en prueba (mg/Nm³)")
-    plt.title("Sensibilidad del modelo AutoReg a la construcción de la serie")
+    plt.xlabel("RMSE en prueba (mg/Nm3)")
+    plt.title("Sensibilidad de ARIMA(3,0,0) a la construccion de la serie")
     plt.grid(axis="x", alpha=0.2)
     plt.tight_layout()
     plt.savefig(FIGURES / "09_sensibilidad_construccion_serie.png", dpi=180, bbox_inches="tight")
     plt.close()
 
-    fechas = pd.date_range(
-        next(iter(escenarios.values())).index[-1] + pd.Timedelta(weeks=1),
-        periods=8,
-        freq="W-SUN",
-    )
+    fechas = pd.date_range(base.index[-1] + pd.Timedelta(weeks=1), periods=8, freq="W-SUN")
     plt.figure(figsize=(11, 5))
     for nombre, valores in pronosticos.items():
         plt.plot(fechas, valores, marker="o", label=nombre)
-    plt.ylabel("NOx pronosticado (mg/Nm³)")
-    plt.title("Pronóstico AutoReg bajo cinco definiciones de la serie")
+    plt.ylabel("NOx pronosticado (mg/Nm3)")
+    plt.title("Pronostico ARIMA(3,0,0) bajo cinco definiciones de la serie")
     plt.grid(alpha=0.2)
     plt.legend(fontsize=8)
     plt.tight_layout()
