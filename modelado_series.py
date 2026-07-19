@@ -1,4 +1,4 @@
-"""EDA, comparación temporal y pronóstico piloto para la serie semanal de NOx."""
+"""EDA, comparación temporal y pronóstico de la entrega para la serie semanal de NOx."""
 
 from __future__ import annotations
 
@@ -24,10 +24,10 @@ from statsmodels.tsa.stattools import adfuller
 warnings.filterwarnings("ignore")
 
 ROOT = Path(__file__).resolve().parent
-PROTO = ROOT / "prototipo_entrega"
-TABLES = PROTO / "resultados" / "tablas"
-FIGURES = PROTO / "resultados" / "figuras"
-DATA = PROTO / "data"
+ENTREGA = ROOT / "entrega"
+TABLES = ENTREGA / "resultados" / "tablas"
+FIGURES = ENTREGA / "resultados" / "figuras"
+DATA = ENTREGA / "data"
 FIGURES.mkdir(parents=True, exist_ok=True)
 
 H_VALIDACION = 32
@@ -349,12 +349,30 @@ def main() -> None:
     plt.legend(fontsize=8)
     guardar_figura("05_validacion_modelos.png")
 
-    plt.figure(figsize=(10, 4))
-    plt.plot(prueba, label="Observado", marker="o", color="black")
-    plt.plot(prueba.index, pred_prueba, label=f"Pronóstico: {mejor}", marker="o")
-    plt.title("Evaluación única sobre la prueba final de ocho semanas")
-    plt.ylabel("mg/Nm³")
-    plt.legend()
+    observado_prueba = prueba.copy()
+    observado_prueba.iloc[~prueba_observada] = np.nan
+    plt.figure(figsize=(10, 4.5))
+    plt.plot(
+        prueba.index, observado_prueba,
+        label="Valor real observado", color="#173f5f",
+        marker="o", linewidth=2
+    )
+    plt.plot(
+        prueba.index, pred_prueba,
+        label=f"Valor predicho: {mejor}", color="#d1495b",
+        marker="o", linewidth=2
+    )
+    plt.scatter(
+        prueba.index[~prueba_observada], prueba.iloc[~prueba_observada],
+        label="Valor interpolado (no evaluado)", color="#7f7f7f",
+        marker="X", s=70, zorder=4
+    )
+    plt.title("Valores reales y predichos en la prueba final")
+    plt.xlabel("Semana")
+    plt.ylabel("Concentración de NOx (mg/Nm³)")
+    plt.grid(alpha=0.2)
+    plt.legend(fontsize=8)
+    plt.tight_layout()
     guardar_figura("06_prueba_final.png")
 
     plt.figure(figsize=(12, 5))

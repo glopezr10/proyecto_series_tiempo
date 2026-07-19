@@ -13,10 +13,10 @@ from statsmodels.tsa.statespace.sarimax import SARIMAX
 
 
 ROOT = Path(__file__).resolve().parent
-PROTO = ROOT / "prototipo_entrega"
-TABLES = PROTO / "resultados" / "tablas"
-FIGURES = PROTO / "resultados" / "figuras"
-DATA = PROTO / "data"
+ENTREGA = ROOT / "entrega"
+TABLES = ENTREGA / "resultados" / "tablas"
+FIGURES = ENTREGA / "resultados" / "figuras"
+DATA = ENTREGA / "data"
 H_VALIDACION = 32
 H_PRUEBA = 8
 
@@ -114,23 +114,13 @@ def main():
     resultados = pd.DataFrame(filas)
     resultados.to_csv(TABLES / "12_analisis_sensibilidad.csv", index=False)
 
-    orden = resultados.sort_values("prueba_RMSE")
-    colores = ["#173f5f" if x == "Media, cobertura 75%" else "#6c8ead" for x in orden["escenario"]]
-    plt.figure(figsize=(11, 5))
-    plt.barh(orden["escenario"], orden["prueba_RMSE"], color=colores)
-    plt.xlabel("RMSE en prueba (mg/Nm3)")
-    plt.title("Sensibilidad de ARIMA(3,0,0) a la construccion de la serie")
-    plt.grid(axis="x", alpha=0.2)
-    plt.tight_layout()
-    plt.savefig(FIGURES / "09_sensibilidad_construccion_serie.png", dpi=180, bbox_inches="tight")
-    plt.close()
-
     fechas = pd.date_range(base.index[-1] + pd.Timedelta(weeks=1), periods=8, freq="W-SUN")
     plt.figure(figsize=(11, 5))
     for nombre, valores in pronosticos.items():
         plt.plot(fechas, valores, marker="o", label=nombre)
-    plt.ylabel("NOx pronosticado (mg/Nm3)")
-    plt.title("Pronostico ARIMA(3,0,0) bajo cinco definiciones de la serie")
+    plt.xlabel("Semana")
+    plt.ylabel("Concentración de NOx (mg/Nm³)")
+    plt.title("Pronóstico bajo cinco definiciones de la serie")
     plt.grid(alpha=0.2)
     plt.legend(fontsize=8)
     plt.tight_layout()

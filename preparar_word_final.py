@@ -284,7 +284,7 @@ def format_document(source, destination):
     doc.core_properties.title = "Pronóstico semanal de concentración de NOx en Angamos 1"
     doc.core_properties.subject = "Trabajo final de Series de Tiempo"
     doc.core_properties.author = (
-        "Hans Engelmann; Jessica Anaid Aguilar Mejía; "
+        "Hans Walter Engelmann Cabrera; Jessica Anaid Aguilar Mejía; "
         "Matías Nicolás García Garcete; Guillermo Eder López Rojas"
     )
     doc.core_properties.keywords = "series de tiempo, ARIMA, NOx, Angamos, SNIFA"
