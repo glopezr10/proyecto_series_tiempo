@@ -6,35 +6,49 @@ El estado de cumplimiento y las decisiones pendientes se registran en `MATRIZ_RE
 
 ## Archivos principales
 
-- `Trabajo_Final_Series_Tiempo.ipynb`: notebook narrativo.
+- `Trabajo_Final_Series_Tiempo.ipynb`: notebook ejecutable de principio a fin.
 - `INFORME_EJECUTIVO.md`: informe listo para revisión y conversión con Pandoc.
 - `data/angamos1_nox_horaria_filtrada.csv`: base horaria reducida y trazable.
 - `data/angamos1_nox_semanal_modelo.csv`: base semanal efectivamente modelada.
 - `resultados/tablas/`: métricas, auditoría y pronóstico.
 - `resultados/figuras/`: gráficos en formato PNG.
 
-## Reconstrucción
+## Ejecución principal
 
-Desde la raíz del proyecto y con el entorno `series-tiempo-darts`:
+La base es abierta y proviene de SNIFA. Desde la raíz del repositorio se instala
+el ambiente y se abre el notebook:
 
 ```powershell
-python ejecutar_auditoria.py
-python ejecutar_modelado_final.py
-python analisis_sensibilidad.py
+python -m pip install -r requirements.txt
+python -m jupyter lab prototipo_entrega/Trabajo_Final_Series_Tiempo.ipynb
 ```
 
-Luego se abre `prototipo_entrega/Trabajo_Final_Series_Tiempo.ipynb` y se
-ejecutan sus celdas en orden. Los scripts `integrar_autoreg.py`,
-`actualizar_figura_validacion.py` y `crear_notebook_piloto.py` pertenecen al
-prototipo anterior y no forman parte de la ruta activa, porque pueden restaurar
-resultados de AutoReg.
+Se selecciona **Run All**. El notebook importa la base horaria entregada y
+reproduce auditoría, agregación semanal, análisis exploratorio, comparación de
+modelos, prueba final, diagnóstico, pronóstico y sensibilidad. No requiere
+ejecutar previamente los scripts de la raíz.
+
+Los scripts `integrar_autoreg.py`, `actualizar_figura_validacion.py` y
+`crear_notebook_piloto.py` pertenecen al prototipo anterior y no forman parte
+de la ruta activa.
 
 ## Conversión del informe a Word
 
 Desde `prototipo_entrega/`:
 
 ```powershell
-pandoc INFORME_EJECUTIVO.md -o INFORME_EJECUTIVO.docx --resource-path=.
+New-Item -ItemType Directory -Force -Path ../tmp_word
+pandoc INFORME_EJECUTIVO.md -o ../tmp_word/base.docx --resource-path=.
+python ../preparar_word_final.py ../tmp_word/base.docx TareaFinal_Engelmann_Aguilar_Garcia_Lopez.docx
 ```
 
-Los códigos operacionales y de calidad ya fueron contrastados con la Resolución Exenta SMA N.º 404/2017 y quedaron documentados en `CODIGOS_OFICIALES.md`. La exportación a Word se realizará al final, una vez cerrados el contenido, los nombres, la ortografía y las referencias.
+Los códigos operacionales y de calidad ya fueron contrastados con la Resolución Exenta SMA N.º 404/2017 y quedaron documentados en `CODIGOS_OFICIALES.md`.
+
+## Archivos que se entregan
+
+1. `TareaFinal_Engelmann_Aguilar_Garcia_Lopez.docx`: informe ejecutivo.
+2. `Trabajo_Final_Series_Tiempo.ipynb`: código Python ejecutado y explicado.
+3. `data/angamos1_nox_horaria_filtrada.csv`: base abierta importada directamente por el notebook.
+
+La base semanal, las tablas y las figuras se mantienen como evidencia
+reproducible, pero no reemplazan los tres archivos solicitados por la pauta.
