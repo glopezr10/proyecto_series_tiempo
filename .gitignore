@@ -15,7 +15,7 @@ venv/
 
 # Temporales y exportaciones locales
 ~$*.docx
-prototipo_entrega/INFORME_EJECUTIVO.docx
+entrega/INFORME_EJECUTIVO.docx
 *.tmp
 tmp/
 tmp_word/

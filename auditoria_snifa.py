@@ -16,8 +16,8 @@ import pandas as pd
 
 ROOT = Path(__file__).resolve().parent
 RAW_DIR = ROOT / "Proyecto_final_ST"
-OUT_DIR = ROOT / "prototipo_entrega" / "data"
-TABLE_DIR = ROOT / "prototipo_entrega" / "resultados" / "tablas"
+OUT_DIR = ROOT / "entrega" / "data"
+TABLE_DIR = ROOT / "entrega" / "resultados" / "tablas"
 
 CENTRAL = "ANGAMOS"
 UGE = "ANGAMOS 1"

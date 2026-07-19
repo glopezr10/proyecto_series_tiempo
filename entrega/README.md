@@ -1,8 +1,6 @@
 # Trabajo final de Series de Tiempo
 
-Esta carpeta contiene la base de desarrollo de la entrega final. El notebook, el informe Markdown y las bases reducidas son los artefactos canónicos; las tablas, figuras y documentos auxiliares sirven como evidencia y apoyo para su revisión.
-
-El estado de cumplimiento y las decisiones pendientes se registran en `MATRIZ_REQUISITOS.md`.
+Esta carpeta contiene los archivos de la entrega final. El notebook, el informe Markdown y las bases reducidas son los artefactos canónicos; las tablas, figuras y documentos auxiliares sirven como evidencia y apoyo para su revisión.
 
 ## Archivos principales
 
@@ -20,7 +18,7 @@ el ambiente y se abre el notebook:
 
 ```powershell
 python -m pip install -r requirements.txt
-python -m jupyter lab prototipo_entrega/Trabajo_Final_Series_Tiempo.ipynb
+python -m jupyter lab entrega/Trabajo_Final_Series_Tiempo.ipynb
 ```
 
 Se selecciona **Run All**. El notebook importa la base horaria entregada y
@@ -28,13 +26,9 @@ reproduce auditoría, agregación semanal, análisis exploratorio, comparación 
 modelos, prueba final, diagnóstico, pronóstico y sensibilidad. No requiere
 ejecutar previamente los scripts de la raíz.
 
-Los scripts `integrar_autoreg.py`, `actualizar_figura_validacion.py` y
-`crear_notebook_piloto.py` pertenecen al prototipo anterior y no forman parte
-de la ruta activa.
-
 ## Conversión del informe a Word
 
-Desde `prototipo_entrega/`:
+Desde `entrega/`:
 
 ```powershell
 New-Item -ItemType Directory -Force -Path ../tmp_word

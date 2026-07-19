@@ -2,7 +2,7 @@
 
 import pandas as pd
 
-import prototipo_modelado as piloto
+import modelado_series as modelado
 
 
 _reset_index = pd.Series.reset_index
@@ -21,4 +21,4 @@ pd.Series.reset_index = reset_index_compatible
 
 
 if __name__ == "__main__":
-    piloto.main()
+    modelado.main()

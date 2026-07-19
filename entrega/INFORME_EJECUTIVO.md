@@ -2,10 +2,10 @@
 title: "Pronóstico semanal de concentración de NOx en la Central Termoeléctrica Angamos"
 subtitle: "Trabajo final - Series de Tiempo"
 author:
-  - "Hans Engelmann"
   - "Jessica Anaid Aguilar Mejía"
   - "Matías Nicolás García Garcete"
   - "Guillermo Eder López Rojas"
+  - "Hans Walter Engelmann Cabrera"
 date: "Julio de 2026"
 lang: es-CL
 ---
@@ -139,6 +139,8 @@ Una vez seleccionado ARIMA(3,0,0), se reentrenó con entrenamiento más validaci
 
 ![Evaluación sobre la prueba final](resultados/figuras/06_prueba_final.png){width=85%}
 
+La separación entre ambas curvas confirma que el pronóstico no reproduce exactamente cada observación. El MAPE de 10,32% indica que el error absoluto representó, en promedio, cerca del 10% del valor observado. El bloque de prueba se mantuvo exclusivamente para evaluación: reajustar la selección después de examinarlo convertiría esa prueba en una segunda validación y debilitaría la medición fuera de muestra.
+
 Posteriormente el modelo se reentrenó con las 299 semanas. Ljung-Box produjo valores p de 0,572 y 0,308 para los rezagos 10 y 20. No se rechaza la ausencia de autocorrelación residual. Bajo este criterio, el modelo final se considera apropiado.
 
 ![Diagnóstico de residuos](resultados/figuras/08_diagnostico_residuos.png){width=90%}
@@ -174,8 +176,6 @@ Se evaluó el mismo modelo ARIMA(3,0,0) bajo cinco construcciones de la serie pa
 | Media, sin umbral | 0 | 36,20 | 29,97 | 0,698 | 315,35 |
 | Mediana, cobertura 75% | 10 | 43,42 | 35,08 | 0,761 | 301,67 |
 | Media DM+RE, cobertura 75% | 25 | 35,44 | 25,78 | 0,142 | 305,19 |
-
-![Sensibilidad del RMSE de prueba](resultados/figuras/09_sensibilidad_construccion_serie.png){width=90%}
 
 ARIMA(3,0,0) mantuvo residuos compatibles con ruido blanco en todos los escenarios. Los escenarios de media con cobertura 50% y sin umbral fueron prácticamente idénticos y elevaron el pronóstico medio desde 312,24 hasta aproximadamente 315,35 mg/Nm³. La mediana redujo el nivel esperado a 301,67 mg/Nm³ y la restricción `DM+RE` a 305,19 mg/Nm³.
 

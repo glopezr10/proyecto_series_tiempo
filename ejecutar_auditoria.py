@@ -13,8 +13,8 @@ def _read_csv_snifa(*args, **kwargs):
 
 pd.read_csv = _read_csv_snifa
 
-import prototipo_auditoria_snifa
+import auditoria_snifa
 
 
 if __name__ == "__main__":
-    prototipo_auditoria_snifa.main()
+    auditoria_snifa.main()
